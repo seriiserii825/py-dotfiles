@@ -5,7 +5,7 @@ from classes.Dotfiles import Dotfiles
 def mainFunc():
     df = Dotfiles()
 
-    parser = argparse.ArgumentParser(description="This is a sample script.")
+    parser = argparse.ArgumentParser(description="Manage dotfiles linking from HOME directory and .config")
     parser.add_argument('-r', action='store_true', help='Remove dotfiles')
     args = parser.parse_args()
 
