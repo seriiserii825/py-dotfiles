@@ -1,18 +1,21 @@
+import argparse
 from classes.Dotfiles import Dotfiles
+
 
 def mainFunc():
     df = Dotfiles()
-    print("1) Linking dotfiles")
-    print("2) Deleting links to dotfiles")
-    choice = input("Choose an option (1 or 2): ").strip()
-    if choice == "1":
-        df.start()
-        print("Dotfiles linked successfully.")
-    elif choice == "2":
+
+    parser = argparse.ArgumentParser(description="This is a sample script.")
+    parser.add_argument('-r', action='store_true', help='Remove dotfiles')
+    args = parser.parse_args()
+
+    if args.r:
         df.deleteLinks()
         print("Links to dotfiles deleted successfully.")
     else:
-        print("Invalid choice. Please enter 1 or 2.")
+        df.start()
+        print("Dotfiles linked successfully.")
+
 
 if __name__ == "__main__":
     mainFunc()
