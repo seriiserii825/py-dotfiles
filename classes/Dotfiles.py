@@ -4,6 +4,7 @@ from pathlib import Path
 
 from classes.Print import Print
 
+
 class Dotfiles:
     def __init__(self):
         self.HOME_DIR_PATH = Path.home()
@@ -15,18 +16,24 @@ class Dotfiles:
     def start(self):
         files_from_dotfiles = self._getFilesInDotfiles()
         files_from_dotignore = self._getFilesFromDotignore()
-        unique_home_files = self._getUniqueFilesFromHomeDir(files_from_dotfiles, files_from_dotignore)
+        unique_home_files = self._getUniqueFilesFromHomeDir(
+            files_from_dotfiles, files_from_dotignore)
         dotfiles_config_dirs = self._getDirsDotfilesConfig()
-        unique_config_dirs = self._getUniqueDirsFromDotfilesConfig(dotfiles_config_dirs, files_from_dotignore)
-        self._linkHomeFilesToDotfiles(unique_home_files, self.DOTIFILES_DIR_PATH, self.HOME_DIR_PATH)
-        self._linkConfigDirsToDotfiles(unique_config_dirs, self.DOTIFLES_CONFIG_DIR_PATH, self.CONFIG_DIR_PATH)
+        unique_config_dirs = self._getUniqueDirsFromDotfilesConfig(
+            dotfiles_config_dirs, files_from_dotignore)
+        self._linkHomeFilesToDotfiles(
+            unique_home_files, self.DOTIFILES_DIR_PATH, self.HOME_DIR_PATH)
+        self._linkConfigDirsToDotfiles(
+            unique_config_dirs, self.DOTIFLES_CONFIG_DIR_PATH, self.CONFIG_DIR_PATH)
 
     def deleteLinks(self):
         files_from_dotfiles = self._getFilesInDotfiles()
         files_from_dotignore = self._getFilesFromDotignore()
-        unique_home_files = self._getUniqueFilesFromHomeDir(files_from_dotfiles, files_from_dotignore)
+        unique_home_files = self._getUniqueFilesFromHomeDir(
+            files_from_dotfiles, files_from_dotignore)
         dotfiles_config_dirs = self._getDirsDotfilesConfig()
-        unique_config_dirs = self._getUniqueDirsFromDotfilesConfig(dotfiles_config_dirs, files_from_dotignore)
+        unique_config_dirs = self._getUniqueDirsFromDotfilesConfig(
+            dotfiles_config_dirs, files_from_dotignore)
 
         self._deleteHomeFilesLinks(unique_home_files, self.HOME_DIR_PATH)
         self._deleteConfigDirsLinks(unique_config_dirs, self.CONFIG_DIR_PATH)
@@ -39,7 +46,8 @@ class Dotfiles:
                     Print.success(f"Removing existing link: {destination}")
                     destination.unlink()
                 else:
-                    Print.error(f"File {destination} does not exist, skipping.")
+                    Print.error(
+                        f"File {destination} does not exist, skipping.")
             except Exception as e:
                 Print.error(f"Failed to remove link for {file}: {e}")
 
@@ -54,7 +62,8 @@ class Dotfiles:
                     elif destination.is_dir():
                         shutil.rmtree(destination)
                 else:
-                    Print.error(f"Directory {destination} does not exist, skipping.")
+                    Print.error(
+                        f"Directory {destination} does not exist, skipping.")
             except Exception as e:
                 Print.error(f"Failed to remove link for {dir}: {e}")
 
@@ -81,7 +90,6 @@ class Dotfiles:
             except Exception as e:
                 Print.error(f"Failed to link {source} to {destination}: {e}")
 
-
     def _linkHomeFilesToDotfiles(self, unique_home_files, dotfiles_dir_path, HOME_DIR_PATH):
         for file in unique_home_files:
             source = f"{dotfiles_dir_path}/{file}"
@@ -93,8 +101,10 @@ class Dotfiles:
 
                 destination = destination / file
                 if destination.exists():
-                    Print.success(f"Skipping {file} as it already exists in home directory.")
-                    os.remove(destination)  # Remove existing file before linking
+                    Print.success(
+                        f"Skipping {file} as it already exists in home directory.")
+                    # Remove existing file before linking
+                    os.remove(destination)
 
                 destination.symlink_to(source)
                 Print.success(f"Linked {source} to {destination}")
