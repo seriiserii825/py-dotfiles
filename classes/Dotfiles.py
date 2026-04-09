@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 from pathlib import Path
 
 from classes.Print import Print
@@ -29,6 +30,16 @@ class Dotfiles:
         self._linkConfigDirsToDotfiles(
             unique_config_dirs, self.DOTIFLES_CONFIG_DIR_PATH, self.CONFIG_DIR_PATH
         )
+        self._runSetupScripts()
+
+    def _runSetupScripts(self):
+        scripts_dir = Path(self.DOTIFILES_DIR_PATH) / "scripts"
+        for script in sorted(scripts_dir.glob("setup-*.sh")):
+            try:
+                result = subprocess.run(["bash", str(script)], check=True)
+                Print.success(f"Ran {script.name}")
+            except subprocess.CalledProcessError as e:
+                Print.error(f"Script {script.name} failed: {e}")
 
     def deleteLinks(self):
         files_from_dotfiles = self._getFilesInDotfiles()
