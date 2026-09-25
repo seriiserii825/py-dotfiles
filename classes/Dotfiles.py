@@ -1,9 +1,9 @@
-import os
 import shutil
 import subprocess
+from datetime import datetime
 from pathlib import Path
 
-from classes.Print import Print
+from py_libs.Print import Print
 
 
 class Dotfiles:
@@ -119,12 +119,18 @@ class Dotfiles:
                     continue
 
                 destination = destination / file
-                if destination.exists():
-                    Print.success(
-                        f"Skipping {file} as it already exists in home directory."
-                    )
-                    # Remove existing file before linking
-                    os.remove(destination)
+                # is_symlink() also catches broken links, exists() doesn't
+                if destination.is_symlink():
+                    destination.unlink()
+                elif destination.is_dir():
+                    Print.error(f"{destination} is a directory, skipping.")
+                    continue
+                elif destination.exists():
+                    # Real file, not a link: back it up instead of deleting
+                    stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    backup = destination.with_name(f"{file}.bak-{stamp}")
+                    destination.rename(backup)
+                    Print.warning(f"Backed up {destination} to {backup}")
 
                 destination.symlink_to(source)
                 Print.success(f"Linked {source} to {destination}")
