@@ -21,6 +21,7 @@ dependencies = [
     "pyflakes (==3.4.0)",
     "pygments (==2.19.2)",
     "rich (==14.0.0)",
+    "ruff>=0.17.3",
     "typing-extensions (==4.14.0)",
 ]
 
@@ -33,3 +34,29 @@ members = [
 py-libs = { workspace = true, editable = true }
 
 
+[tool.ruff]
+line-length = 88
+exclude = [
+    "migrations",
+    "tests",
+    "docs",
+    "build",
+    "dist",
+    "venv",
+    ".venv",
+    ".git",
+    "__pycache__",
+]
+fix = true
+unsafe-fixes = true
+target-version = "py312"  # <- specify Python 3.12 explicitly here
+
+[tool.ruff.lint]
+select = [
+    "F401",  # Unused import
+    "F403",  # Wildcard import
+    "F405",  # Name may be undefined, or defined from star imports
+    "F841",  # Local variable is assigned to but never used
+    "E501",  # Line too long
+    "I",     # Import sorting (isort-compatible)
+]

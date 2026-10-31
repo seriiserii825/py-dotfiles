@@ -36,7 +36,7 @@ class Dotfiles:
         scripts_dir = Path(self.DOTIFILES_DIR_PATH) / "scripts"
         for script in sorted(scripts_dir.glob("setup-*.sh")):
             try:
-                result = subprocess.run(["bash", str(script)], check=True)
+                subprocess.run(["bash", str(script)], check=True)
                 Print.success(f"Ran {script.name}")
             except subprocess.CalledProcessError as e:
                 Print.error(f"Script {script.name} failed: {e}")
